@@ -1,0 +1,90 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Linker files
+*.ilk
+
+# Debugger Files
+*.pdb
+*.dwo
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# ESP-IDF build artifacts
+/build/
+build/
+.cache/
+/.cache/
+sdkconfig.old
+*.bin
+*.elf
+*.map
+
+# Python build/cache
+__pycache__/
+*.pyc
+
+# VS Code workspace settings (optional to ignore if team shares settings)
+.vscode/
+*.code-workspace
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# CMake cache and generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+install_manifest.txt
+
+# Backup and swap files
+*~
+*.swp
+*.swo
+
+# Local virtual environments
+.env/
+.venv/
+venv/
+
+# zip files
+*.zip
+*.bak
+
+managed_components/

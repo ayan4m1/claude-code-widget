@@ -1,0 +1,16 @@
+idf_component_register(
+    SRCS
+        "main.cpp"
+    INCLUDE_DIRS
+        "include"
+    REQUIRES
+        app_update
+        bt
+        driver
+        esp_event
+        esp_netif
+        esp_system
+        esp_timer
+        freertos
+        nvs_flash
+)
