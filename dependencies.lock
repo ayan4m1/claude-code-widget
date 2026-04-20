@@ -107,11 +107,22 @@ dependencies:
     source:
       type: idf
     version: 5.5.3
+  masuidrive/nimble-nordic-uart:
+    component_hash: 80659307952a9ff6d8e539fe3e39aa10217247b366a3b158dca0e2cf488e8bc0
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=5.0'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 1.0.3
 direct_dependencies:
 - codewitch-honey-crisis/htcw_esp_panel
 - codewitch-honey-crisis/htcw_json
 - codewitch-honey-crisis/htcw_uix
 - idf
-manifest_hash: c245935f7692c9f2cea0cf49080a351c6eaff954c322f19b93749b47e405186a
+- masuidrive/nimble-nordic-uart
+manifest_hash: 99d11d6c04628283da7cf2306901e1e3cf8fd145bd22f05e1dc56e3660e075b7
 target: esp32s3
 version: 2.0.0

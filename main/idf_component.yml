@@ -18,3 +18,4 @@ dependencies:
   codewitch-honey-crisis/htcw_json: ^0.2.6
   codewitch-honey-crisis/htcw_uix: ^1.8.15
   codewitch-honey-crisis/htcw_esp_panel: ^0.8.0
+  masuidrive/nimble-nordic-uart: ^1.0.3
