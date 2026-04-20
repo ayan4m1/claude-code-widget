@@ -3,6 +3,9 @@
 
 #include "custom_panel.h"
 #include "gfx.hpp"
+extern "C" {
+#include "nimble-nordic-uart.h"
+}
 #include "panel.h"
 #include "uix.hpp"
 
@@ -41,7 +44,8 @@ static tt_font loading_font(telegrama, 24, font_size_units::px);
 static screen_t main_screen;
 static screen_t loading_screen;
 
-static label_t connecting_label;
+static label_t advertising_label;
+static rect_t logo_rect;
 
 void draw_screen() {
   while (lcd.dirty()) {
@@ -49,7 +53,7 @@ void draw_screen() {
   }
 }
 
-void app_task(void* arg) {
+void lcd_task(void* arg) {
   for (;;) {
     uint32_t started = pdTICKS_TO_MS(xTaskGetTickCount());
 
@@ -60,6 +64,38 @@ void app_task(void* arg) {
     vTaskDelay(pdMS_TO_TICKS(17 - elapsed));
   }
 }
+
+void ble_task(void* arg) {
+  static char buffer[CONFIG_NORDIC_UART_MAX_LINE_LENGTH + 1];
+
+  for (;;) {
+    size_t item_size;
+    if (nordic_uart_rx_buf_handle) {
+      const char* item = (char*)xRingbufferReceive(nordic_uart_rx_buf_handle,
+                                                   &item_size, portMAX_DELAY);
+      if (item) {
+        int i;
+        for (i = 0; i < item_size; ++i) {
+          if (item[i] >= 'a' && item[i] <= 'z')
+            buffer[i] = item[i] - 0x20;
+          else
+            buffer[i] = item[i];
+        }
+        buffer[item_size] = '\0';
+        // memcpy(buffer, item, item_size);
+
+        puts(buffer);
+        vRingbufferReturnItem(nordic_uart_rx_buf_handle, (void*)item);
+      }
+    } else {
+      vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+  }
+
+  vTaskDelete(NULL);
+}
+
+void draw_rect() {}
 
 extern "C" void app_main(void) {
   panel_lcd_init();
@@ -73,19 +109,28 @@ extern "C" void app_main(void) {
   loading_font.initialize();
 
   loading_screen.dimensions({LCD_WIDTH, LCD_HEIGHT});
-  loading_screen.background_color(scr_color_t::white);
+  loading_screen.background_color(scr_color_t::black);
 
-  connecting_label.bounds(srect16(0, 0, LCD_WIDTH, LCD_HEIGHT));
-  connecting_label.color(uix_color_t::red);
-  connecting_label.font(loading_font);
-  connecting_label.text("Connecting...");
-  connecting_label.text_justify(uix_justify::center);
-  loading_screen.register_control(connecting_label);
+  advertising_label.bounds(srect16(0, 0, LCD_WIDTH, LCD_HEIGHT));
+  advertising_label.color(uix_color_t::red);
+  advertising_label.font(loading_font);
+  advertising_label.text("Advertising...");
+  advertising_label.text_justify(uix_justify::center);
+  loading_screen.register_control(advertising_label);
+
+  main_screen.dimensions({LCD_WIDTH, LCD_HEIGHT});
+  main_screen.background_color(scr_color_t::black);
+
+  logo_rect.bounds(srect16(0, 0, LCD_WIDTH, LCD_HEIGHT));
+  main_screen.register_control(logo_rect);
 
   lcd.active_screen(loading_screen);
   while (lcd.dirty()) {
     lcd.update();
   }
 
-  xTaskCreatePinnedToCore(app_task, "app", 4096, nullptr, 5, nullptr, 1);
+  nordic_uart_start("Claude Code Widget", nullptr);
+
+  xTaskCreatePinnedToCore(lcd_task, "LCD", 4096, nullptr, 5, nullptr, 1);
+  xTaskCreatePinnedToCore(ble_task, "BLE", 4096, nullptr, 5, nullptr, 0);
 }
