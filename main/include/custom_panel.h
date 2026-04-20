@@ -11,13 +11,13 @@
 #define LCD_INIT esp_lcd_new_panel_st7789
 #define LCD_HRES 240
 #define LCD_VRES 280
-#define LCD_COLOR_SPACE LCD_COLOR_RGB
+#define LCD_COLOR_SPACE LCD_COLOR_BGR
 #define LCD_CLOCK_HZ (40 * 1000 * 1000)
 #define LCD_GAP_X 20
 #define LCD_MIRROR_X 1
 #define LCD_MIRROR_Y 0
-#define LCD_INVERT_COLOR 0
-#define LCD_SWAP_COLOR_BYTES 1
+#define LCD_INVERT_COLOR 1
+#define LCD_SWAP_COLOR_BYTES 0
 #define LCD_SWAP_XY 1
 #define LCD_BCKL_PWM_CHANNEL 0
 #define BUTTON_MASK BUTTON_PIN(0)
